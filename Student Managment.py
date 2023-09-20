@@ -1,4 +1,5 @@
 import sqlite3
+import time
 
 connection = sqlite3.connect('students.db')
 cursor = connection.cursor()
@@ -9,7 +10,7 @@ def get_name(cursor):
     cursor.exceute("SELECT name FROM students")
     results = cursor.fetchall()
     if len(results) == 0:
-        print("No Students on Database")
+        print("No Students in Database")
         return None
     for i in range(len(results)):
         print(f"{i+1}- {results[i][0]}")
@@ -22,6 +23,7 @@ def get_name(cursor):
 choice = None
 # User menu 
 while choice != "5":
+    time.sleep(1)
     print("______WELCOME TO THE STUDNET MANAGMENT DATABASE ______")
     print("1) Show list of Students Enrolled ")
     print("2) Update Student Information ")
@@ -31,6 +33,7 @@ while choice != "5":
     choice = input("> ")
     print()
     if choice == "1":
+        time.sleep(1)
         # Shows list of students
         cursor.execute("SELECT * FROM students ORDER BY name DESC")
         print("{:>10}  {:>10}  {:>10}". format ("Name", "GPA", "Email"))
@@ -38,6 +41,7 @@ while choice != "5":
             print("{:>10}  {:>10}  {:>10}" .format(record[0], record[1], record[2]))
      
     elif choice == "2":
+        time.sleep(1)
         # Update student info
         
         try:
@@ -53,6 +57,7 @@ while choice != "5":
             print("Invalid Input!")
 
     elif choice == "3":
+        time.sleep(1)
         # Add new student
         try:
             name = input ("Name: ")
@@ -61,10 +66,11 @@ while choice != "5":
             values = (name, gpa, email)
             cursor.execute("INSERT INTO students VALUES (?,?,?)", values)
             connection.commit()
-        except:
+        except ValueError:
             print("Invalid Input")
 
     elif choice == "4":
+        time.sleep(1)
         # remove student
         name = get_name(cursor)
         if name == None:
