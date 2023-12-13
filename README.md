@@ -25,14 +25,10 @@ I utilized the IDE VScode and the programing language Python. I also used the SQ
 
 # Useful Websites
 
-{Make a list of websites that you found helpful in this project}
-
 - [SQLite](https://www.sqlite.org/index.html)
 - [W3Schools Sqlite tutorial](https://www.w3schools.blog/sqlite-tutorial)
 
 # Future Work
-
-{Make a list of things that you need to fix, improve, and add in the future.}
 
 - Creating an actual unser interface that looks cleaner and more appealing than a IDE terminal 
 - Add more options so that more can be done with this database. maybe allow for diffrent databases to be created
