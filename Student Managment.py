@@ -1,9 +1,11 @@
 import sqlite3
 import time
 
+#connects to database
 connection = sqlite3.connect('students.db')
 cursor = connection.cursor()
 
+#checks for datbase and creates it if not detected
 cursor.execute("CREATE TABLE IF NOT EXISTS students (name TEXT gpa TEXT email TEXT)") 
 
 def get_name(cursor):
