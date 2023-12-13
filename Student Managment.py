@@ -9,7 +9,7 @@ cursor.execute('''
     CREATE TABLE IF NOT EXISTS students (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         name TEXT,
-        age INTEGER,
+        gpa INTEGER,
         email TEXT
     )
 ''')
@@ -27,8 +27,8 @@ class StudentManagementApp:
         self.label_email = ttk.Label(root, text="Email:")
         self.entry_email = ttk.Entry(root)
 
-        self.label_age = ttk.Label(root, text="Age:")
-        self.entry_age = ttk.Entry(root)
+        self.label_gpa = ttk.Label(root, text="Age:")
+        self.entry_gpa = ttk.Entry(root)
 
         # Create buttons
         self.button_add = ttk.Button(root, text="Add Student", command=self.add_student)
@@ -38,22 +38,22 @@ class StudentManagementApp:
         self.label_name.grid(row=0, column=0, padx=10, pady=5)
         self.entry_name.grid(row=0, column=1, padx=10, pady=5)
 
-        self.label_roll_number.grid(row=1, column=0, padx=10, pady=5)
-        self.entry_roll_number.grid(row=1, column=1, padx=10, pady=5)
+        self.label_email.grid(row=1, column=0, padx=10, pady=5)
+        self.entry_email.grid(row=1, column=1, padx=10, pady=5)
 
-        self.label_age.grid(row=2, column=0, padx=10, pady=5)
-        self.entry_age.grid(row=2, column=1, padx=10, pady=5)
+        self.label_gpa.grid(row=2, column=0, padx=10, pady=5)
+        self.entry_gpa.grid(row=2, column=1, padx=10, pady=5)
 
         self.button_add.grid(row=3, column=0, columnspan=2, pady=10)
         self.button_view.grid(row=4, column=0, columnspan=2, pady=10)
 
     def add_student(self):
         name = self.entry_name.get()
-        roll_number = self.entry_roll_number.get()
-        age = self.entry_age.get()
+        email = self.entry_email.get()
+        gpa = self.entry_gpa.get()
 
-        if name and roll_number and age:
-            conn.execute("INSERT INTO students (name, roll_number, age) VALUES (?, ?, ?)", (name, roll_number, age))
+        if name and email and gpa:
+            conn.execute("INSERT INTO students (name, gpa, email) VALUES (?, ?, ?)", (name, gpa, email))
             conn.commit()
             self.clear_entries()
             print("Student added successfully!")
@@ -64,11 +64,11 @@ class StudentManagementApp:
         view_window = tk.Toplevel(self.root)
         view_window.title("View Students")
 
-        tree = ttk.Treeview(view_window, columns=("ID", "Name", "Roll Number", "Age"), show="headings")
+        tree = ttk.Treeview(view_window, columns=("ID", "Name", "Gpa" , "Email"), show="headings")
         tree.heading("ID", text="ID")
         tree.heading("Name", text="Name")
-        tree.heading("Roll Number", text="Roll Number")
-        tree.heading("Age", text="Age")
+        tree.heading("Email", text="Email")
+        tree.heading("Gpa", text="Gpa")
 
         students = conn.execute("SELECT * FROM students").fetchall()
 
@@ -79,7 +79,7 @@ class StudentManagementApp:
 
     def clear_entries(self):
         self.entry_name.delete(0, "end")
-        self.entry_roll_number.delete(0, "end")
+        self.entry_email.delete(0, "end")
         self.entry_age.delete(0, "end")
 
 if __name__ == "__main__":
