@@ -1,4 +1,5 @@
 import sqlite3
+from tkinter import messagebox
 import tkinter as tk
 from tkinter import ttk
 
@@ -24,11 +25,12 @@ class StudentManagementApp:
         self.label_name = ttk.Label(root, text="Name:")
         self.entry_name = ttk.Entry(root)
 
+        self.label_gpa = ttk.Label(root, text="Gpa:")
+        self.entry_gpa = ttk.Entry(root)
+
         self.label_email = ttk.Label(root, text="Email:")
         self.entry_email = ttk.Entry(root)
 
-        self.label_gpa = ttk.Label(root, text="Age:")
-        self.entry_gpa = ttk.Entry(root)
 
         # Create buttons
         self.button_add = ttk.Button(root, text="Add Student", command=self.add_student)
@@ -52,13 +54,23 @@ class StudentManagementApp:
         email = self.entry_email.get()
         gpa = self.entry_gpa.get()
 
+        def error():
+            messagebox.showerror('Data Error', 'Please fill out all fields!')
+            return
+
+        def success():
+            messagebox.showinfo('Input Success', 'Student added to table!')
+            return
+
         if name and email and gpa:
             conn.execute("INSERT INTO students (name, gpa, email) VALUES (?, ?, ?)", (name, gpa, email))
             conn.commit()
             self.clear_entries()
-            print("Student added successfully!")
+            success()
+            return
         else:
-            print("Please fill in all fields.")
+            error()
+            return
 
     def view_students(self):
         view_window = tk.Toplevel(self.root)
@@ -80,7 +92,7 @@ class StudentManagementApp:
     def clear_entries(self):
         self.entry_name.delete(0, "end")
         self.entry_email.delete(0, "end")
-        self.entry_age.delete(0, "end")
+        self.entry_gpa.delete(0, "end")
 
 if __name__ == "__main__":
     root = tk.Tk()
