@@ -4,7 +4,7 @@ import time
 connection = sqlite3.connect('students.db')
 cursor = connection.cursor()
 
-cursor.execute("CREATE TABLE IF NOT EXISTS students (name TEXT, GPA)")
+cursor.execute("CREATE TABLE IF NOT EXISTS students (name TEXT gpa TEXT email TEXT)") 
 
 def get_name(cursor):
     cursor.exceute("SELECT name FROM students")
@@ -48,7 +48,7 @@ while choice != "5":
             name = input ("Name: ")
             gpa = float(input ("GPA: "))
             email = input("Email: ")
-            alues = (name, gpa, email)
+            values = (name, gpa, email)
             cursor.execute("UPDATE employees SET pay = ? WHERE name = ?", values)
             connection.commit()
             if cursor.rowcount == 0:
