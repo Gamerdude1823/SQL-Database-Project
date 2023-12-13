@@ -1,86 +1,91 @@
 import sqlite3
-import time
+import tkinter as tk
+from tkinter import ttk
 
-#connects to database
-connection = sqlite3.connect('students.db')
-cursor = connection.cursor()
+# Create a SQLite database and a students table
+conn = sqlite3.connect("student_database.db")
+cursor = conn.cursor()
+cursor.execute('''
+    CREATE TABLE IF NOT EXISTS students (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        name TEXT,
+        age INTEGER,
+        email TEXT
+    )
+''')
+conn.commit()
 
-#checks for datbase and creates it if not detected
-cursor.execute("CREATE TABLE IF NOT EXISTS students (name TEXT gpa TEXT email TEXT)") 
+class StudentManagementApp:
+    def __init__(self, root):
+        self.root = root
+        self.root.title("Student Management System")
 
-def get_name(cursor):
-    cursor.exceute("SELECT name FROM students")
-    results = cursor.fetchall()
-    if len(results) == 0:
-        print("No Students in Database")
-        return None
-    for i in range(len(results)):
-        print(f"{i+1}- {results[i][0]}")
-    choice = 0 
-    while choice < 1 or choice > len(results):
-        choice =int(input("Name ID: "))
-    return results [choice-1][0]
+        # Create labels and entry widgets
+        self.label_name = ttk.Label(root, text="Name:")
+        self.entry_name = ttk.Entry(root)
 
+        self.label_email = ttk.Label(root, text="Email:")
+        self.entry_email = ttk.Entry(root)
 
-choice = None
-# User menu 
-while choice != "5":
-    time.sleep(1)
-    print("______WELCOME TO THE STUDNET MANAGMENT DATABASE ______")
-    print("1) Show list of Students Enrolled ")
-    print("2) Update Student Information ")
-    print("3) Add New Student")
-    print("4) Remove Student")
-    print("5) Quit")
-    choice = input("> ")
-    print()
-    if choice == "1":
-        time.sleep(1)
-        # Shows list of students
-        cursor.execute("SELECT * FROM students ORDER BY name DESC")
-        print("{:>10}  {:>10}  {:>10}". format ("Name", "GPA", "Email"))
-        for record in cursor.fetchall():
-            print("{:>10}  {:>10}  {:>10}" .format(record[0], record[1], record[2]))
-     
-    elif choice == "2":
-        time.sleep(1)
-        # Update student info
-        
-        try:
-            name = input ("Name: ")
-            gpa = float(input ("GPA: "))
-            email = input("Email: ")
-            values = (name, gpa, email)
-            cursor.execute("UPDATE employees SET pay = ? WHERE name = ?", values)
-            connection.commit()
-            if cursor.rowcount == 0:
-                print("Invalid Name!")
-        except ValueError:
-            print("Invalid Input!")
+        self.label_age = ttk.Label(root, text="Age:")
+        self.entry_age = ttk.Entry(root)
 
-    elif choice == "3":
-        time.sleep(1)
-        # Add new student
-        try:
-            name = input ("Name: ")
-            gpa = float(input ("GPA: "))
-            email = input("Email: ")
-            values = (name, gpa, email)
-            cursor.execute("INSERT INTO students VALUES (?,?,?)", values)
-            connection.commit()
-        except ValueError:
-            print("Invalid Input")
+        # Create buttons
+        self.button_add = ttk.Button(root, text="Add Student", command=self.add_student)
+        self.button_view = ttk.Button(root, text="View Students", command=self.view_students)
 
-    elif choice == "4":
-        time.sleep(1)
-        # remove student
-        name = get_name(cursor)
-        if name == None:
-            continue
-        values = (name)
-        cursor.execute("DELETE FROM students WHERE name = ?", values)
-        connection.commit()
-    print()
+        # Place widgets using grid layout
+        self.label_name.grid(row=0, column=0, padx=10, pady=5)
+        self.entry_name.grid(row=0, column=1, padx=10, pady=5)
 
-connection.close()
+        self.label_roll_number.grid(row=1, column=0, padx=10, pady=5)
+        self.entry_roll_number.grid(row=1, column=1, padx=10, pady=5)
 
+        self.label_age.grid(row=2, column=0, padx=10, pady=5)
+        self.entry_age.grid(row=2, column=1, padx=10, pady=5)
+
+        self.button_add.grid(row=3, column=0, columnspan=2, pady=10)
+        self.button_view.grid(row=4, column=0, columnspan=2, pady=10)
+
+    def add_student(self):
+        name = self.entry_name.get()
+        roll_number = self.entry_roll_number.get()
+        age = self.entry_age.get()
+
+        if name and roll_number and age:
+            conn.execute("INSERT INTO students (name, roll_number, age) VALUES (?, ?, ?)", (name, roll_number, age))
+            conn.commit()
+            self.clear_entries()
+            print("Student added successfully!")
+        else:
+            print("Please fill in all fields.")
+
+    def view_students(self):
+        view_window = tk.Toplevel(self.root)
+        view_window.title("View Students")
+
+        tree = ttk.Treeview(view_window, columns=("ID", "Name", "Roll Number", "Age"), show="headings")
+        tree.heading("ID", text="ID")
+        tree.heading("Name", text="Name")
+        tree.heading("Roll Number", text="Roll Number")
+        tree.heading("Age", text="Age")
+
+        students = conn.execute("SELECT * FROM students").fetchall()
+
+        for student in students:
+            tree.insert("", "end", values=student)
+
+        tree.pack(expand=True, fill="both")
+
+    def clear_entries(self):
+        self.entry_name.delete(0, "end")
+        self.entry_roll_number.delete(0, "end")
+        self.entry_age.delete(0, "end")
+
+if __name__ == "__main__":
+    root = tk.Tk()
+    app = StudentManagementApp(root)
+    root.mainloop()
+
+# Close the database connection when the application is closed
+conn.close()
