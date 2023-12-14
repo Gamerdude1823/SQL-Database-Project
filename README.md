@@ -11,9 +11,7 @@ the user is asked returned to the interface after each process is completed unle
 
 I wanted to see how a SQL database can be intigrated so that I could potentially use it for other projects in the future. I currently do not have any ideas for the future use of an SQL database but it is good to understand for the future!
 
-{Provide a link to your YouTube demonstration. It should be a 4-5 minute demo of the software running, a walkthrough of the code, and a view of how created the Relational Database.}
-
-[Software Demo Video](http://youtube.link.goes.here)
+[Software Demo Video](https://youtu.be/Qnz4ZDcpx08)
 
 # Relational Database
 
@@ -30,6 +28,6 @@ I utilized the IDE VScode and the programing language Python. I also used the SQ
 
 # Future Work
 
-- Creating an actual unser interface that looks cleaner and more appealing than a IDE terminal 
+- Creating an actual user interface that looks cleaner and more appealing than a this simple GUI
 - Add more options so that more can be done with this database. maybe allow for diffrent databases to be created
 - Clean up the code and ultilize more features of Python

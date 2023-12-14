@@ -35,6 +35,7 @@ class StudentManagementApp:
         # Create buttons
         self.button_add = ttk.Button(root, text="Add Student", command=self.add_student)
         self.button_view = ttk.Button(root, text="View Students", command=self.view_students)
+        self.button_remove = ttk.Button(root, text="Remove Student", command=self.remove_student)
 
         # Place widgets using grid layout
         self.label_name.grid(row=0, column=0, padx=10, pady=5)
@@ -48,7 +49,9 @@ class StudentManagementApp:
 
         self.button_add.grid(row=3, column=0, columnspan=2, pady=10)
         self.button_view.grid(row=4, column=0, columnspan=2, pady=10)
+        self.button_remove.grid(row=5, column=0, columnspan=2, pady=10)
 
+# Adds a student to the database
     def add_student(self):
         name = self.entry_name.get()
         email = self.entry_email.get()
@@ -72,6 +75,40 @@ class StudentManagementApp:
             error()
             return
 
+# Removes a student from the database
+    def remove_student(self):
+        remove_window = tk.Toplevel(self.root)
+        remove_window.title("Remove Student")
+
+        label_remove = ttk.Label(remove_window, text="Enter student ID to remove:")
+        entry_remove = ttk.Entry(remove_window)
+        button_confirm = ttk.Button(remove_window, text="Remove", command=lambda: self.confirm_remove(entry_remove.get()))
+        
+        label_remove.pack(pady=10)
+        entry_remove.pack(pady=10)
+        button_confirm.pack(pady=10)
+
+    def confirm_remove(self, student_id):
+
+        def remove_error():
+            messagebox.showerror('Data Error', 'Please input valid student ID!')
+            return
+
+        def remove_success():
+            messagebox.showinfo('Removal Successful', 'Student removed from database!')
+            return         
+     
+        try:
+            student_id = int(student_id)
+            conn.execute("DELETE FROM students WHERE id=?", (student_id,))
+            conn.commit()
+            remove_success()
+        except ValueError:
+            remove_error()
+        except Exception as e:
+            messagebox.showerror(f"An error occurred: {str(e)}")
+
+# allows a user to view students in database
     def view_students(self):
         view_window = tk.Toplevel(self.root)
         view_window.title("View Students")
